@@ -1,0 +1,10 @@
+services:
+  jupyter:
+    image: quay.io/jupyter/base-notebook
+    container_name: docker-learning-jupyter
+    ports:
+      - "8888:8888"
+    environment:
+      JUPYTER_TOKEN: learn-docker
+    volumes:
+      - ./work:/home/jovyan/work

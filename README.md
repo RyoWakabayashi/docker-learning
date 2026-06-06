@@ -11,6 +11,7 @@ Docker コンテナの基礎を学ぶための教材とハンズオン例をま�
 ## ハンズオン例
 
 - [nginx で Web 配信](examples/nginx/README.md)
+- [Jupyter をコンテナで起動](examples/jupyter/README.md)
 - [PostgreSQL + pgAdmin](examples/postgres-pgadmin/README.md)
 
 ## おすすめの進め方
@@ -20,4 +21,5 @@ Docker コンテナの基礎を学ぶための教材とハンズオン例をま�
 3. `nginx` 例でコンテナから静的 Web 配信を試す
 4. `Dockerfile` を編集して Web コンテンツを差し替える
 5. `docker compose` で複数コンテナ構成を動かす
-6. `PostgreSQL + pgAdmin` 例で初期 DB、ネットワーク、ボリュームを確認する
+6. `Jupyter` 例でブラウザアプリをコンテナで起動し、ファイル共有を試す
+7. `PostgreSQL + pgAdmin` 例で初期 DB、ネットワーク、ボリュームを確認する

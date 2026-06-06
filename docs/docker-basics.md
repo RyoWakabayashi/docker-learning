@@ -469,7 +469,47 @@ docker compose logs -f
 
 たとえば `web` と `db` を別サービスとして書くと、「どの image を使うか」「どのポートを開けるか」「どのネットワークにつなぐか」を 1 ファイルで管理できます。
 
-## 13. PostgreSQL + pgAdmin
+## 13. Jupyter をコンテナで立てる
+
+Jupyter は、ブラウザ上で Python などを対話的に実行できるツールです。データ分析、機械学習の試作、SQL や可視化の検証、社内向けの分析メモ共有などでよく使われます。
+
+コンテナで Jupyter を立てると、次のメリットがあります。
+
+- Python やライブラリの環境差分を減らしやすい
+- チームで同じ分析環境を再現しやすい
+- ローカル PC を汚しにくい
+- 検証用の環境をすぐ作って消せる
+
+Jupyter Docker Stacks の公式 docs では、Jupyter 用の ready-to-run image が提供されており、現在は Quay.io から配布されています。
+
+最小例:
+
+```bash
+docker run -p 8888:8888 quay.io/jupyter/base-notebook
+```
+
+このリポジトリでは、`docker compose` で起動できるサンプルを用意しています。
+
+- [Jupyter サンプル](../examples/jupyter/README.md)
+
+この例では次を学べます。
+
+- ブラウザアプリをコンテナで起動する
+- ホストのフォルダをコンテナへマウントする
+- `compose.yaml` で設定を固定化する
+
+### Jupyter をコンテナ化する実務イメージ
+
+現場では次のような用途があります。
+
+- データ分析チームの共通作業環境
+- 機械学習の前処理や検証環境
+- API をたたく検証ノートブック
+- 社内レポートや PoC のたたき台
+
+「開発環境が人によって違う」問題を減らしたいときに、コンテナ化された Jupyter はかなり役立ちます。
+
+## 14. PostgreSQL + pgAdmin
 
 次の段階として、DB と管理 UI を Compose で一緒に立ち上げます。
 
@@ -502,7 +542,7 @@ flowchart LR
 
 つまり、このハンズオンでは「データベース本体」と「その管理画面」を別コンテナとして動かします。
 
-## 14. 初期 DB 構築、ネットワーク、ボリューム
+## 15. 初期 DB 構築、ネットワーク、ボリューム
 
 ### 初期 DB 構築
 
@@ -543,7 +583,7 @@ Compose では通常、同じ Compose プロジェクト内のサービスは同
 
 今回の PostgreSQL 例では、初期 SQL を渡すために `bind mount` を使い、DB の保存には `volume` を使っています。
 
-## 15. この教材で学べる最小コマンドセット
+## 16. この教材で学べる最小コマンドセット
 
 ```bash
 docker run hello-world
@@ -557,14 +597,14 @@ docker compose logs -f
 docker compose down
 ```
 
-## 16. つまずきやすいポイント
+## 17. つまずきやすいポイント
 
 - `image` と `container` を混同しやすいです。消したい対象がどちらかを意識すると整理しやすくなります
 - `localhost` とコンテナ名の使い分けで迷いやすいです。自分の PC からは `localhost`、コンテナ同士ではサービス名を使うことが多いです
-- DB データが消えたら、volume を使っているかを確認します
+- DB データやノートブックが消えたら、volume や bind mount を使っているかを確認します
 - `docker compose down -v` は volume も消すので、学習中でも実データを消したくないときは注意します
 
-## 17. 実際のシステム開発、ビジネスの現場でどう使われているか
+## 18. 実際のシステム開発、ビジネスの現場でどう使われているか
 
 ここからは、教材の範囲を少し超えて「実務では何に使われるのか」を見ます。
 
@@ -577,6 +617,7 @@ docker compose down
 - CI/CD でのビルド、テスト、自動デプロイ
 - バッチ処理や非同期ジョブの実行
 - 開発環境の標準化
+- 分析基盤や Jupyter の共通実行環境
 
 ### パターン 1. Web アプリと API を同じ作法で動かす
 
@@ -629,6 +670,18 @@ AWS Architecture Blog では、マイクロサービスは小さな独立した�
 
 必要なときだけ起動して、終わったら止める、という使い方がしやすいからです。
 
+### パターン 5. 分析や PoC の実行環境をそろえる
+
+Jupyter のような対話型ツールも、コンテナと相性がよいです。
+
+たとえば:
+
+- 分析メンバー全員が同じ Python パッケージ構成を使う
+- pandas や matplotlib の版差分で悩みにくくする
+- 検証用の notebook をそのまま共有する
+
+アプリ開発だけでなく、データ活用の現場でもコンテナはよく使われます。
+
 ### 具体的な事例 1. Smartsheet
 
 AWS の事例では、Smartsheet は Amazon ECS と AWS Fargate を使って、デプロイ頻度を週次から 1 日に複数回へ改善し、デプロイにかかるエンジニア作業を数時間から数分へ短縮したと紹介されています。
@@ -677,20 +730,22 @@ AWS Compute Blog では、既存の ASP.NET Core アプリをコンテナ化し�
 - 監視、ログ、権限、脆弱性対策は別途しっかり考える必要があります
 - コンテナ化とマイクロサービス化は別の話です
 
-## 18. 次にやるとよいこと
+## 19. 次にやるとよいこと
 
 1. `examples/nginx` の `index.html` を書き換えて再ビルドする
-2. `examples/postgres-pgadmin` の SQL を変えて初期データを増やす
-3. `docker exec -it` でコンテナの中に入ってみる
-4. `docker volume ls` と `docker network ls` で周辺リソースも観察する
+2. `examples/jupyter` を起動して notebook を 1 つ追加してみる
+3. `examples/postgres-pgadmin` の SQL を変えて初期データを増やす
+4. `docker exec -it` でコンテナの中に入ってみる
+5. `docker volume ls` と `docker network ls` で周辺リソースも観察する
 
-## 19. 参考リンク
+## 20. 参考リンク
 
 - [Docker Desktop for Mac 公式インストール手順](https://docs.docker.com/desktop/setup/install/mac-install/)
 - [Docker Desktop for Windows 公式インストール手順](https://docs.docker.com/desktop/setup/install/windows-install/)
 - [Docker Compose インストール概要](https://docs.docker.com/compose/install/)
 - [Docker Hub 公式ドキュメント](https://docs.docker.com/docker-hub/)
 - [What is Docker? 公式概要](https://docs.docker.com/engine/docker-overview/)
+- [Jupyter Docker Stacks 公式ドキュメント](https://jupyter-docker-stacks.readthedocs.io/)
 - [GitHub Container Registry 公式ドキュメント](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry)
 - [Amazon ECR 公式概要](https://docs.aws.amazon.com/AmazonECR/latest/userguide/what-is-ecr.html)
 - [Amazon ECS 公式ドキュメント](https://docs.aws.amazon.com/ecs/)
