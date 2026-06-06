@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Docker Learning</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f4efe6;
+        --card: #fffdf9;
+        --text: #1c1917;
+        --accent: #c2410c;
+        --sub: #57534e;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        font-family: "Hiragino Sans", "Yu Gothic", sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(circle at top left, #fed7aa, transparent 30%),
+          linear-gradient(135deg, var(--bg), #e7e5e4);
+      }
+
+      main {
+        width: min(720px, calc(100% - 32px));
+        padding: 40px;
+        border-radius: 24px;
+        background: var(--card);
+        box-shadow: 0 24px 60px rgba(28, 25, 23, 0.12);
+      }
+
+      h1 {
+        margin: 0 0 16px;
+        font-size: clamp(2rem, 5vw, 3.5rem);
+        line-height: 1.05;
+      }
+
+      p {
+        margin: 0 0 12px;
+        line-height: 1.8;
+        color: var(--sub);
+      }
+
+      .badge {
+        display: inline-block;
+        margin-bottom: 16px;
+        padding: 6px 12px;
+        border-radius: 999px;
+        font-size: 0.875rem;
+        font-weight: 700;
+        color: white;
+        background: var(--accent);
+      }
+
+      code {
+        padding: 2px 6px;
+        border-radius: 6px;
+        background: #f5f5f4;
+        color: var(--accent);
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <span class="badge">Docker Learning</span>
+      <h1>nginx コンテナで Web 配信できました</h1>
+      <p>
+        このページは <code>Dockerfile</code> で追加した
+        <code>index.html</code> を、nginx コンテナから配信しています。
+      </p>
+      <p>
+        次は HTML を書き換えて <code>docker build</code> し直し、表示が変わることを確認してみてください。
+      </p>
+    </main>
+  </body>
+</html>
